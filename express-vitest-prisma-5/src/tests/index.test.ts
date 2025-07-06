@@ -3,7 +3,7 @@ import request from "supertest";
 import { app } from "../index"
 import { prismaClient } from "../__mocks__/db";
 
-console.log(prismaClient.request.create)
+console.log(Object.keys(prismaClient.request.create));
 
 vi.mock('../db');
 
