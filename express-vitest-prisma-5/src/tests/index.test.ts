@@ -16,12 +16,24 @@ describe("POST /sum", () => {
         answer: 3,
         type: "Sum"
       });
+
+      vi.spyOn(prismaClient.request, "create");
+
       const res = await request(app).post("/sum").send({
-        a: 1,
-        b: 2
+        a: 4,
+        b: 5
       });
+
+      expect(prismaClient.request.create).toHaveBeenCalledWith({
+        data: {
+          a: 4,
+          b: 5,
+          type: "Sum",
+          answer: 9
+          }
+      })
       expect(res.statusCode).toBe(200);
-      expect(res.body.answer).toBe(3);
+      expect(res.body.answer).toBe(9);
       expect(res.body.id).toBe(1);
     });
 
