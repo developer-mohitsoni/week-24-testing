@@ -31,8 +31,11 @@ app.post("/sum", async (req:Request, res:Response) => {
         }
     })
 
+    console.log(response);
+
     res.json({
-        answer
+        answer,
+        id: response.id
     })
 });
 
@@ -61,11 +64,12 @@ app.get("/sum", async(req:Request, res:Response) => {
     })
 
     res.json({
-        answer
+        answer,
+        id: response.id
     })
 });
 
-app.post("/multiply",  (req:Request, res:Response) => {
+app.post("/multiply",  async(req:Request, res:Response) => {
     const parsedResponse = sumInput.safeParse(req.body)
     
     if (!parsedResponse.success) {
@@ -77,8 +81,17 @@ app.post("/multiply",  (req:Request, res:Response) => {
 
     const answer = parsedResponse.data.a * parsedResponse.data.b;
 
+    const response = await prismaClient.request.create({
+        data: {
+            a: parsedResponse.data.a,
+            b: parsedResponse.data.b,
+            answer,
+            type: "Multiply"
+        }
+    })
+
     res.json({
         answer,
-        type: "Multiply"
+        id: response.id
     })
 })

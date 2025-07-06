@@ -9,12 +9,20 @@ vi.mock('../db');
 
 describe("POST /sum", () => {
   it("should return the sum of two numbers", async () => {
+      prismaClient.request.create.mockResolvedValue({
+        id: 1,
+        a: 1,
+        b: 2,
+        answer: 3,
+        type: "Sum"
+      });
       const res = await request(app).post("/sum").send({
         a: 1,
         b: 2
       });
       expect(res.statusCode).toBe(200);
       expect(res.body.answer).toBe(3);
+      expect(res.body.id).toBe(1);
     });
 
     it("should return 411 if no inputs are provided", async () => {
@@ -49,12 +57,20 @@ describe("GET /sum", () => {
 
 describe("POST /multiply", () => {
   it("should return the multiply of two numbers", async () => {
+      prismaClient.request.create.mockResolvedValue({
+        id: 1,
+        a: 3,
+        b: 2,
+        answer: 6,
+        type: "Multiply"
+      });
       const res = await request(app).post("/multiply").send({
         a: 3,
         b: 2
       });
       expect(res.statusCode).toBe(200);
       expect(res.body.answer).toBe(6);
+      expect(res.body.id).toBe(1);
     });
 
     it("should return 411 if no inputs are provided", async () => {
