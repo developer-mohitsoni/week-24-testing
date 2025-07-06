@@ -22,17 +22,17 @@ app.post("/sum", async (req:Request, res:Response) => {
 
     const answer = parsedResponse.data.a + parsedResponse.data.b;
 
-    const response = await prismaClient.sum.create({
+    const response = await prismaClient.request.create({
         data: {
             a: parsedResponse.data.a,
             b: parsedResponse.data.b,
-            result: answer
+            answer,
+            type: "Sum"
         }
     })
 
     res.json({
-        answer,
-        id: response.id
+        answer
     })
 });
 
@@ -46,21 +46,39 @@ app.get("/sum", async(req:Request, res:Response) => {
         res.status(411).json({
             message: "Incorrect inputs"
         })
-        return;``
+        return;
     }
 
     const answer = parsedResponse.data.a + parsedResponse.data.b;
 
-    const response = await prismaClient.sum.create({
+    const response = await prismaClient.request.create({
         data: {
             a: parsedResponse.data.a,
             b: parsedResponse.data.b,
-            result: answer
+            answer,
+            type: "Sum"
         }
     })
 
     res.json({
-        answer,
-        id: response.id
+        answer
     })
 });
+
+app.post("/multiply",  (req:Request, res:Response) => {
+    const parsedResponse = sumInput.safeParse(req.body)
+    
+    if (!parsedResponse.success) {
+        res.status(411).json({
+            message: "Incorrect inputs"
+        })
+        return;
+    }
+
+    const answer = parsedResponse.data.a * parsedResponse.data.b;
+
+    res.json({
+        answer,
+        type: "Multiply"
+    })
+})

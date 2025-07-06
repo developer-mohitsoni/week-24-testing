@@ -13,3 +13,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Request {
+  id     Int         @id @default(autoincrement())
+  type   RequestType
+  a      Int
+  b      Int
+  answer Int
+}
+
+enum RequestType {
+  Sum
+  Multiply
+}

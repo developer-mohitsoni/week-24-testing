@@ -3,19 +3,12 @@ import request from "supertest";
 import { app } from "../index"
 import { prismaClient } from "../__mocks__/db";
 
-console.log(prismaClient.sum.create)
+console.log(prismaClient.request.create)
 
 vi.mock('../db');
 
 describe("POST /sum", () => {
   it("should return the sum of two numbers", async () => {
-      prismaClient.sum.create.mockResolvedValue({
-        id: 1,
-        a: 1,
-        b: 1,
-        result: 3
-      });
-
       const res = await request(app).post("/sum").send({
         a: 1,
         b: 2
@@ -35,12 +28,6 @@ describe("POST /sum", () => {
 
 describe("GET /sum", () => {
   it("should return the sum of two numbers", async () => {
-      prismaClient.sum.create.mockResolvedValue({
-        id: 1,
-        a: 1,
-        b: 1,
-        result: 3
-      });
       const res = await request(app)
         .get("/sum")
         .set({
@@ -58,4 +45,21 @@ describe("GET /sum", () => {
     expect(res.statusCode).toBe(411);
   });
 
+});
+
+describe("POST /multiply", () => {
+  it("should return the multiply of two numbers", async () => {
+      const res = await request(app).post("/multiply").send({
+        a: 3,
+        b: 2
+      });
+      expect(res.statusCode).toBe(200);
+      expect(res.body.answer).toBe(6);
+    });
+
+    it("should return 411 if no inputs are provided", async () => {
+      const res = await request(app).post("/multiply").send({});
+      expect(res.statusCode).toBe(411);
+      expect(res.body.message).toBe("Incorrect inputs");
+    });
 });
